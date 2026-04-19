@@ -1,0 +1,3 @@
+Via-Builder is a powerful, fast, and customizable timetable generation algorithm with an easy-to-use API. Via-Builder has support for web development integration through emscripten, as well as desktop development through native compilation.
+
+Designed for use with the Via-Planner timetable building tool for University of Toronto students, Via-Builder was designed for working with course naming and data encoding convention at the University of Toronto, but can also be extended to work with arbitrary course inputs with a bit of JSON manipulation.

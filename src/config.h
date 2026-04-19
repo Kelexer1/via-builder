@@ -78,3 +78,6 @@ const uint32_t SECONDS_PER_TIMESLOT = 3600 / TIMESLOTS_PER_HOUR; // How many sec
 
 const uint32_t RUSH_HOURS[] = { 8, 9, 17, 18 }; // 8am, 9am, 5pm, 6pm are pretty standard rush hours
 const uint32_t NUM_RUSH_HOURS = 4;
+
+// Day numbering info:
+// Days are numbered from 0-6 as follows: Sun = 0, Mon = 1, Tue = 2, Wed = 3, Thu = 4, Fri = 5, Sat = 6

@@ -34,7 +34,7 @@ private:
      * @brief Return the fitness score of a timetable on a specific day
      * @param timetable The timetable to check the score of
      * @param courses The courses being placed
-     * @param day The day as an integer (check README.MD for day numberings)
+     * @param day The day as an integer (check config.h for day numberings)
      * @param semester Which semester to check (must be from 0..MAX_SEMESTERS-1)
      * @return The fitness score
      */
@@ -64,7 +64,7 @@ private:
      * @brief Returns the index into the courses vector based on what course is blocking a specific timeslot in a timetable
      * @param timetable The timetable to check
      * @param courses The courses being placed
-     * @param day The day as an integer (check README.MD for day numberings)
+     * @param day The day as an integer (check config.h for day numberings)
      * @param semester Which semester to check (must be from 0..MAX_SEMESTERS-1)
      * @param timeslot The timeslot offset from the start of the day (not hours or seconds)
      * @return The index into the courses vector indicating which course is at that timeslot

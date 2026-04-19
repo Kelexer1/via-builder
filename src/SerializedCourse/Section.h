@@ -14,7 +14,7 @@ public:
      * @brief Registers a new meeting time to this section
      * @param startSeconds The seconds after midnight that this meeting time starts
      * @param endSeconds The seconds after midnight that this meeting time end
-     * @param day The day as an integer (check README.MD for day numberings)
+     * @param day The day as an integer (check config.h for day numberings)
      * @param online Whether this meeting takes place online
      * @param zz Whether this meeting time is misc (often used for tests etc.)
      * @param semester Which semester this meeting time is in (must be from 0..MAX_SEMESTERS-1)
@@ -30,28 +30,28 @@ public:
 
     /**
      * @brief Returns the timeslot where the first occuring in person meeting occurs
-     * @param day The day as an integer (check README.md for day numberings)
+     * @param day The day as an integer (check config.h for day numberings)
      * @param semester Which semester to check (must be from 0..MAX_SEMESTERS-1)
      */
     int getInPersonStart(int day, int semester) const;
 
     /**
      * @brief Returns the timeslot where the last occuring in person meeting occurs
-     * @param day The day as an integer (check README.md for day numberings)
+     * @param day The day as an integer (check config.h for day numberings)
      * @param semester Which semester to check (must be from 0..MAX_SEMESTERS-1)
      */
     int getInPersonEnd(int day, int semester) const;
 
     /**
      * @brief Returns the timeslot where the last occuring online meeting occurs
-     * @param day The day as an integer (check README.md for day numberings)
+     * @param day The day as an integer (check config.h for day numberings)
      * @param semester Which semester to check (must be from 0..MAX_SEMESTERS-1)
      */
     int getOnlineStart(int day, int semester) const;
 
     /**
      * @brief Returns the timeslot where the last occuring online meeting occurs
-     * @param day The day as an integer (check README.md for day numberings)
+     * @param day The day as an integer (check config.h for day numberings)
      * @param semester Which semester to check (must be from 0..MAX_SEMESTERS-1)
      */
     int getOnlineEnd(int day, int semester) const;
