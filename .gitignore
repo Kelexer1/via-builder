@@ -1,0 +1,6 @@
+build/
+.cache/
+.vscode/*
+!.vscode/settings.json
+!.vscode/launch.json
+courses.json
