@@ -29,28 +29,28 @@ public:
     bool isConflicting(const Section& other);
 
     /**
-     * @brief Returns the timeslot where the first occuring in person meeting occurs
+     * @brief Returns the timeslot where the first occurring in person meeting occurs
      * @param day The day as an integer (check config.h for day numberings)
      * @param semester Which semester to check (must be from 0..MAX_SEMESTERS-1)
      */
     int getInPersonStart(int day, int semester) const;
 
     /**
-     * @brief Returns the timeslot where the last occuring in person meeting occurs
+     * @brief Returns the timeslot where the last occurring in person meeting occurs
      * @param day The day as an integer (check config.h for day numberings)
      * @param semester Which semester to check (must be from 0..MAX_SEMESTERS-1)
      */
     int getInPersonEnd(int day, int semester) const;
 
     /**
-     * @brief Returns the timeslot where the last occuring online meeting occurs
+     * @brief Returns the timeslot where the last occurring online meeting occurs
      * @param day The day as an integer (check config.h for day numberings)
      * @param semester Which semester to check (must be from 0..MAX_SEMESTERS-1)
      */
     int getOnlineStart(int day, int semester) const;
 
     /**
-     * @brief Returns the timeslot where the last occuring online meeting occurs
+     * @brief Returns the timeslot where the last occurring online meeting occurs
      * @param day The day as an integer (check config.h for day numberings)
      * @param semester Which semester to check (must be from 0..MAX_SEMESTERS-1)
      */

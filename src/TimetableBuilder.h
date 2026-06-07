@@ -10,10 +10,11 @@ public:
     /**
      * @brief Builds a timetable containing all the courses provided, as well as the config in config.h and config.c
      * @param courses The courses that need to be placed
+     * @param checked Will be modified to contain the total number of timetables checked
      * @return std::nullopt if no valid timetable was found, otherwise a Timetable object encoding the generated timetable
      * and some other information about it
      */
-    static std::optional<Timetable> buildTimetable(std::vector<Course*>& courses);
+    static std::optional<Timetable> buildTimetable(std::vector<Course*>& courses, uint32_t* checked = nullptr);
 
 private:
     /**

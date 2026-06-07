@@ -10,10 +10,9 @@
 #include <iterator>
 #include <vector>
 #include <algorithm>
-#include <iostream>
 #include <cmath>
 
-std::optional<Timetable> TimetableBuilder::buildTimetable(std::vector<Course*>& courses) {
+std::optional<Timetable> TimetableBuilder::buildTimetable(std::vector<Course*>& courses, uint32_t* checked) {
     std::vector<Timetable> currentTimetables = { Timetable{} };
     uint32_t courseCount = (uint32_t)courses.size();
     uint32_t timetablesChecked = 0;
@@ -69,7 +68,7 @@ std::optional<Timetable> TimetableBuilder::buildTimetable(std::vector<Course*>& 
         }
     }
 
-    std::cout << "Checked " << timetablesChecked << " timetables\n";
+    if (checked) *checked = timetablesChecked;
     return currentTimetables[0];
 }
 
@@ -112,19 +111,19 @@ int TimetableBuilder::getFitnessScoreForDay(const Timetable& timetable, const st
         }
     }
 
-    const double prefStartSlot = (double)(PREFFERED_MIN_START - DAY_START) / SECONDS_PER_TIMESLOT;
-    const double prefEndSlot = (double)(PREFFERED_MAX_END - DAY_START) / SECONDS_PER_TIMESLOT;
+    const double prefStartSlot = (double)(PREFERRED_MIN_START - DAY_START) / SECONDS_PER_TIMESLOT;
+    const double prefEndSlot = (double)(PREFERRED_MAX_END - DAY_START) / SECONDS_PER_TIMESLOT;
     const double startSlot = (double)startTimeslot;
     const double endSlot = (double)endTimeslot;
 
     const double startDiffHours = std::abs(startSlot - prefStartSlot) / TIMESLOTS_PER_HOUR;
     const int startScore = (int)std::lround(
-        std::max(0.0, (double)PREFFERED_MIN_START_REWARD - startDiffHours)
+        std::max(0.0, (double)PREFERRED_MIN_START_REWARD - startDiffHours)
     );
 
     const double lateEndHours = std::max(0.0, endSlot - prefEndSlot) / TIMESLOTS_PER_HOUR;
     const int endScore = (int)std::lround(
-        std::max(0.0, (double)PREFFERED_MAX_END_REWARD - lateEndHours)
+        std::max(0.0, (double)PREFERRED_MAX_END_REWARD - lateEndHours)
     );
 
     fitness += startScore + endScore;

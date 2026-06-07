@@ -34,7 +34,8 @@ public:
     std::array<std::array<std::bitset<TIMESLOTS_PER_DAY>, DAYS_PER_WEEK>, MAX_SEMESTERS> onlineMeetingTimes;
     std::array<std::array<std::bitset<TIMESLOTS_PER_DAY>, DAYS_PER_WEEK>, MAX_SEMESTERS> zzMeetingTimes;
 
-    // These arrays encode the first and last occurences of specific types of meeting times, useful to avoid recalculting every time they are needed
+    // These arrays encode the first and last occurrences of specific types of meeting times, useful to avoid
+    // recalculating every time they are needed
 
     std::array<std::array<uint32_t, DAYS_PER_WEEK>, MAX_SEMESTERS> inPersonFirstMeetingTimes;
     std::array<std::array<uint32_t, DAYS_PER_WEEK>, MAX_SEMESTERS> inPersonLastMeetingTimes;

@@ -6,8 +6,9 @@ extern uint32_t MAX_GAP; // The max number of hours between two classes
 extern uint32_t MAX_DAY_LENGTH; // The max length of every day in hours
 extern uint32_t MIN_DAY_LENGTH; // The min length of every day in hours
 extern uint32_t MAX_CONTINUOUS_CLASSES; // The max number of hours of classes in a row
-extern uint32_t PREFFERED_MIN_START; // The preffered smallest hour that every day should start at
-extern uint32_t PREFFERED_MAX_END; // The preffered latest hour that every day should end at
+extern uint32_t PREFERRED_MIN_START; // The preferred smallest hour that every day should start at
+extern uint32_t PREFERRED_MAX_END; // The preferred latest hour that every day should end at
+
 
 extern bool GUARANTEE_CROSS_CAMPUS_GAP; // Whether to penalize two (in person) meeting times close together that are at different campuses
 
@@ -32,13 +33,13 @@ extern double MIN_DAY_LENGTH_PENALTY_EXPONENT;
 extern uint32_t MAX_CONTINUOUS_CLASSES_PENALTY;
 extern double MAX_CONTINUOUS_CLASSES_PENALTY_EXPONENT;
 
-extern uint32_t PREFFERED_MIN_START_REWARD; // Applied once per day
+extern uint32_t PREFERRED_MIN_START_REWARD; // Applied once per day
 
-extern uint32_t PREFFERED_MAX_END_REWARD; // Applied once per day
+extern uint32_t PREFERRED_MAX_END_REWARD; // Applied once per day
 
 
 // Constant fitness rewards and penalties
-extern uint32_t MULTI_CAMPUS_GAP; // How many hours to place between two in person meetings occuring at different campuses
+extern uint32_t MULTI_CAMPUS_GAP; // How many hours to place between two in person meetings occurring at different campuses
 
 extern uint32_t AVOID_RUSH_HOUR_PENALTY; // Applied per hour overlapping (can be at most twice, for start and end overlaps)
 
@@ -55,7 +56,7 @@ const int FITNESS_PRUNE_THRESHOLD = INT32_MIN; // When to decide to stop explori
 
 // Explore up to BEAM_WIDTH possible placements per course (most of the time there are < 10 options anyways) and then
 // keep the best BEAM_WIDTH for the next iteration
-const uint32_t BEAM_WIDTH = 100;
+const uint32_t BEAM_WIDTH = 50;
 
 
 // Constants

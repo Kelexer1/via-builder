@@ -1,3 +1,6 @@
 {
-    "clangd.compileCommands": "${workspaceFolder}/build/native-debug/compile_commands.json"
+    "clangd.compileCommands": "${workspaceFolder}/build/native-debug/compile_commands.json",
+    "cSpell.words": [
+        "emscripten"
+    ]
 }
