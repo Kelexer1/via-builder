@@ -1,0 +1,14 @@
+{
+    "name": "@kelexer/via-builder",
+    "version": "1.0.0",
+    "type": "module",
+    "main": "dist/index.js",
+    "types": "dist/index.d.ts",
+    "files": [
+        "dist"
+    ],
+    "scripts": {
+        "build": "bash scripts/build.sh",
+        "prepack": "npm run build"
+    }
+}

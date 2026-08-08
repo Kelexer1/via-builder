@@ -40,7 +40,9 @@ if(EMSCRIPTEN)
     target_link_options(via-builder PRIVATE
         "--no-entry"
         "-sMODULARIZE=1"
+        "-sEXPORT_ES6=1"
         "-sEXPORT_NAME=createViaBuilderModule"
+        "-sENVIRONMENT=web"
         "-sALLOW_MEMORY_GROWTH=1"
         "-sEXCEPTION_CATCHING_ALLOWED='1'"
         "-sASSERTIONS=1"
