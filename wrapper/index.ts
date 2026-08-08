@@ -1,19 +1,6 @@
-import createViaBuilderModule, { ViaBuilderModule } from '../dist/via-builder.js';
+import createViaBuilderModule, { ViaBuilderModule, ViaBuilderApi } from './via-builder.js';
 
 type JsonObject = Record<string, unknown>;
-
-interface ViaBuilderApi {
-    setPreferences(preferences: string): void;
-    setSettings(settings: string): void;
-    addCourse(course: string): void;
-    removeCourse(courseCode: string, type: string): void;
-    buildTimetable(): string | null | undefined;
-    delete(): void;
-}
-
-interface ViaBuilderModule {
-    ViaBuilderAPI: new () => ViaBuilderApi;
-}
 
 let modulePromise: Promise<ViaBuilderModule> | null = null;
 

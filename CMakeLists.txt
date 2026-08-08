@@ -3,6 +3,7 @@ project(via-builder VERSION 1.0)
 
 set(CMAKE_CXX_STANDARD 23)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
+set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 
 add_executable(via-builder)
 
@@ -59,5 +60,5 @@ add_custom_command(
     TARGET via-builder POST_BUILD
     COMMAND ${CMAKE_COMMAND} -E copy_if_different
         "${CMAKE_BINARY_DIR}/compile_commands.json"
-        "${CMAKE_SOURCE_DIR}/build/compile_commands.json"
+        "${CMAKE_SOURCE_DIR}/compile_commands.json"
 )

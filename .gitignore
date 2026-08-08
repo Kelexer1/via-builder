@@ -1,6 +1,11 @@
 build/
+build-wasm/
+node_modules/
+dist/
 .cache/
 .vscode/*
 !.vscode/settings.json
 !.vscode/launch.json
 courses.json
+*.tgz
+compile_commands.json
