@@ -1,6 +1,6 @@
 {
     "name": "@kelexer/via-builder",
-    "version": "1.1.0",
+    "version": "1.1.2",
     "description": "A general-purpose WASM timetable-generating engine with an emphasis on customizability",
     "license": "MIT",
     "repository": {

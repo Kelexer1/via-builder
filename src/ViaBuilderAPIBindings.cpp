@@ -2,6 +2,7 @@
 #include "ViaBuilderAPI.h"
 #include "ViaBuilderAPITypes.h"
 #include <emscripten/bind.h>
+#include <emscripten/val.h>
 
 using namespace emscripten;
 
@@ -16,6 +17,45 @@ val toResultArray(const std::vector<CourseResult>& results) {
     arr.call<void>("push", obj);
   }
   return arr;
+}
+
+MeetingTimeInput meetingTimeInputFromVal(const val& v) {
+  MeetingTimeInput out;
+  out.start = v["start"].as<size_t>();
+  out.end = v["end"].as<size_t>();
+  out.day = v["day"].as<int>();
+  out.online = v["online"].as<bool>();
+  out.zz = v["zz"].as<bool>();
+  out.semester = v["semester"].as<int>();
+  return out;
+}
+
+SectionInput sectionInputFromVal(const val& v) {
+  SectionInput out;
+  out.name = v["name"].as<std::string>();
+
+  val meetingTimes = v["meetingTimes"];
+  unsigned length = meetingTimes["length"].as<unsigned>();
+  out.meetingTimes.reserve(length);
+  for (unsigned i = 0; i < length; i++) {
+    out.meetingTimes.push_back(meetingTimeInputFromVal(meetingTimes[i]));
+  }
+  return out;
+}
+
+CourseInput courseInputFromVal(const val& v) {
+  CourseInput out;
+  out.code = v["code"].as<std::string>();
+  out.campus = v["campus"].as<std::string>();
+  out.type = v["type"].as<std::string>();
+
+  val sections = v["sections"];
+  unsigned length = sections["length"].as<unsigned>();
+  out.sections.reserve(length);
+  for (unsigned i = 0; i < length; i++) {
+    out.sections.push_back(sectionInputFromVal(sections[i]));
+  }
+  return out;
 }
 } // namespace
 
@@ -43,31 +83,12 @@ EMSCRIPTEN_BINDINGS(via_builder) {
       .field("preferredMinStartReward", &SettingsInput::PREFERRED_MIN_START_REWARD)
       .field("preferredMaxEndReward", &SettingsInput::PREFERRED_MAX_END_REWARD);
 
-  value_object<MeetingTimeInput>("MeetingTimeInput")
-      .field("start", &MeetingTimeInput::start)
-      .field("end", &MeetingTimeInput::end)
-      .field("day", &MeetingTimeInput::day)
-      .field("online", &MeetingTimeInput::online)
-      .field("zz", &MeetingTimeInput::zz)
-      .field("semester", &MeetingTimeInput::semester);
-  register_vector<MeetingTimeInput>("MeetingTimeInputVector");
-
-  value_object<SectionInput>("SectionInput")
-      .field("name", &SectionInput::name)
-      .field("meetingTimes", &SectionInput::meetingTimes);
-  register_vector<SectionInput>("SectionInputVector");
-
-  value_object<CourseInput>("CourseInput")
-      .field("code", &CourseInput::code)
-      .field("campus", &CourseInput::campus)
-      .field("type", &CourseInput::type)
-      .field("sections", &CourseInput::sections);
-
   class_<ViaBuilderAPI>("ViaBuilderAPI")
       .constructor<>()
       .function("setPreferences", &ViaBuilderAPI::setPreferences)
       .function("setSettings", &ViaBuilderAPI::setSettings)
-      .function("addCourse", &ViaBuilderAPI::addCourse)
+      .function("addCourse",
+                optional_override([](ViaBuilderAPI& self, val course) { self.addCourse(courseInputFromVal(course)); }))
       .function("removeCourse", &ViaBuilderAPI::removeCourse)
       .function("getAddedCourses",
                 optional_override([](ViaBuilderAPI& self) { return toResultArray(self.getAddedCourses()); }))
