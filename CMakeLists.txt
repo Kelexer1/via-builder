@@ -45,9 +45,9 @@ if(EMSCRIPTEN)
         "-sEXPORT_NAME=createViaBuilderModule"
         "-sENVIRONMENT=web"
         "-sALLOW_MEMORY_GROWTH=1"
-        "-sEXCEPTION_CATCHING_ALLOWED='1'"
+        "-sDISABLE_EXCEPTION_CATCHING=0"
         "-sASSERTIONS=1"
-        "-lembind"
+        "--bind"
     )
     target_include_directories(via-builder PRIVATE
         "${EMSCRIPTEN_ROOT_PATH}/system/include"

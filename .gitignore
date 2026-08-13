@@ -9,3 +9,4 @@ dist/
 courses.json
 *.tgz
 compile_commands.json
+wrapper/via-builder.d.ts
