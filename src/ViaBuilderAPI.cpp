@@ -1,60 +1,55 @@
 #include "ViaBuilderAPI.h"
+#include "SerializedCourse/Course.h"
+#include "SerializedCourse/Section.h"
 #include "SerializedCourse/Timetable.h"
 #include "TimetableBuilder.h"
+#include "ViaBuilderAPITypes.h"
 #include "config.h"
-#include "JSON/json.hpp"
 
+#include <algorithm>
 #include <memory>
 #include <string>
 
-using json = nlohmann::json;
-
-void ViaBuilderAPI::setPreferences(const std::string& preferenceJSON) {
-  json preferences = json::parse(preferenceJSON);
-
-  MAX_GAP = preferences["MAX_GAP"];
-  MAX_DAY_LENGTH = preferences["MAX_DAY_LENGTH"];
-  MIN_DAY_LENGTH = preferences["MIN_DAY_LENGTH"];
-  MAX_CONTINUOUS_CLASSES = preferences["MAX_CONTINUOUS_CLASSES"];
-  PREFERRED_MIN_START = preferences["PREFERRED_MIN_START"];
-  PREFERRED_MAX_END = preferences["PREFERRED_MAX_END"];
-  GUARANTEE_CROSS_CAMPUS_GAP = preferences["GUARANTEE_CROSS_CAMPUS_GAP"];
-  AVOID_RUSH_HOURS = preferences["AVOID_RUSH_HOURS"];
-  ONLINE_PREFERENCE = preferences["ONLINE_PREFERENCE"];
+void ViaBuilderAPI::setPreferences(const PreferencesInput& preferences) {
+  MAX_GAP = preferences.MAX_GAP;
+  MAX_DAY_LENGTH = preferences.MAX_DAY_LENGTH;
+  MIN_DAY_LENGTH = preferences.MIN_DAY_LENGTH;
+  MAX_CONTINUOUS_CLASSES = preferences.MAX_CONTINUOUS_CLASSES;
+  PREFERRED_MIN_START = preferences.PREFERRED_MIN_START;
+  PREFERRED_MAX_END = preferences.PREFERRED_MAX_END;
+  GUARANTEE_CROSS_CAMPUS_GAP = preferences.GUARANTEE_CROSS_CAMPUS_GAP;
+  AVOID_RUSH_HOURS = preferences.AVOID_RUSH_HOURS;
+  ONLINE_PREFERENCE = preferences.ONLINE_PREFERENCE;
 }
 
-void ViaBuilderAPI::setSettings(const std::string& settingsJSON) {
-  json settings = json::parse(settingsJSON);
-
-  MAX_GAP_PENALTY = settings["MAX_GAP_PENALTY"];
-  MAX_GAP_PENALTY_EXPONENT = settings["MAX_GAP_PENALTY_EXPONENT"];
-  MAX_DAY_LENGTH_PENALTY = settings["MAX_DAY_LENGTH_PENALTY"];
-  MAX_DAY_LENGTH_PENALTY_EXPONENT = settings["MAX_DAY_LENGTH_PENALTY_EXPONENT"];
-  MIN_DAY_LENGTH_PENALTY = settings["MIN_DAY_LENGTH_PENALTY"];
-  MIN_DAY_LENGTH_PENALTY_EXPONENT = settings["MIN_DAY_LENGTH_PENALTY_EXPONENT"];
-  MAX_CONTINUOUS_CLASSES_PENALTY = settings["MAX_CONTINUOUS_CLASSES_PENALTY"];
-  MAX_CONTINUOUS_CLASSES_PENALTY_EXPONENT = settings["MAX_CONTINUOUS_CLASSES_PENALTY_EXPONENT"];
-  PREFERRED_MIN_START_REWARD = settings["PREFERRED_MIN_START_REWARD"];
-  PREFERRED_MAX_END_REWARD = settings["PREFERRED_MAX_END_REWARD"];
+void ViaBuilderAPI::setSettings(const SettingsInput& settings) {
+  MAX_GAP_PENALTY = settings.MAX_GAP_PENALTY;
+  MAX_GAP_PENALTY_EXPONENT = settings.MAX_GAP_PENALTY_EXPONENT;
+  MAX_DAY_LENGTH_PENALTY = settings.MAX_DAY_LENGTH_PENALTY;
+  MAX_DAY_LENGTH_PENALTY_EXPONENT = settings.MAX_DAY_LENGTH_PENALTY_EXPONENT;
+  MIN_DAY_LENGTH_PENALTY = settings.MIN_DAY_LENGTH_PENALTY;
+  MIN_DAY_LENGTH_PENALTY_EXPONENT = settings.MIN_DAY_LENGTH_PENALTY_EXPONENT;
+  MAX_CONTINUOUS_CLASSES_PENALTY = settings.MAX_CONTINUOUS_CLASSES_PENALTY;
+  MAX_CONTINUOUS_CLASSES_PENALTY_EXPONENT = settings.MAX_CONTINUOUS_CLASSES_PENALTY_EXPONENT;
+  PREFERRED_MIN_START_REWARD = settings.PREFERRED_MIN_START_REWARD;
+  PREFERRED_MAX_END_REWARD = settings.PREFERRED_MAX_END_REWARD;
 }
 
-void ViaBuilderAPI::addCourse(const std::string& courseJSON) {
-  json courseParsed = json::parse(courseJSON);
-  auto course = std::make_unique<Course>(std::string(courseParsed["code"]), std::string(courseParsed["campus"]),
-                                         std::string(courseParsed["type"]));
+void ViaBuilderAPI::addCourse(const CourseInput& course) {
+  auto courseData = std::make_unique<Course>(course.code, course.campus, course.type);
 
-  for (const auto& sectionJSON : courseParsed["sections"]) {
-    Section* section = new Section(std::string(sectionJSON["name"]));
+  for (const auto& section : course.sections) {
+    Section* sectionData = new Section(section.name);
 
-    for (const auto& meetingTimeJSON : sectionJSON["meetingTimes"]) {
-      section->addMeetingTime(meetingTimeJSON["start"], meetingTimeJSON["end"], meetingTimeJSON["day"],
-                              meetingTimeJSON["online"], meetingTimeJSON["zz"], meetingTimeJSON["semester"]);
+    for (const auto& meetingTimeData : section.meetingTimes) {
+      sectionData->addMeetingTime(meetingTimeData.start, meetingTimeData.end, meetingTimeData.day,
+                                  meetingTimeData.online, meetingTimeData.zz, meetingTimeData.semester);
     }
 
-    course->sections.push_back(section);
+    courseData->sections.push_back(sectionData);
   }
 
-  this->courses.push_back(std::move(course));
+  this->courses.push_back(std::move(courseData));
 }
 
 void ViaBuilderAPI::removeCourse(const std::string& courseCode, const std::string& type) {
@@ -65,44 +60,38 @@ void ViaBuilderAPI::removeCourse(const std::string& courseCode, const std::strin
                       this->courses.end());
 }
 
-std::string ViaBuilderAPI::getAddedCourses() {
-  json result = json::array();
-
+std::vector<CourseResult> ViaBuilderAPI::getAddedCourses() {
+  std::vector<CourseResult> result;
   for (const auto& course : this->courses) {
-    json courseJSON;
-    courseJSON["code"] = course->code;
-    courseJSON["type"] = course->type;
-    result.push_back(courseJSON);
+    const CourseResult entry = {.code = course->code, .type = course->type, .section = ""};
+    result.push_back(entry);
   }
 
-  return result.dump();
+  return result;
 }
 
-std::string ViaBuilderAPI::buildTimetable() {
-  json result = json::array();
+std::vector<CourseResult> ViaBuilderAPI::buildTimetable() {
+  std::vector<CourseResult> result;
 
   std::vector<Course*> coursePtrs;
   for (const auto& courseUPtr : this->courses) {
     coursePtrs.push_back(courseUPtr.get());
   }
 
-  if (coursePtrs.empty()) {
-    return result.dump();
-  }
+  if (coursePtrs.empty())
+    return result;
 
   auto timetableOpt = TimetableBuilder::buildTimetable(coursePtrs);
-  if (!timetableOpt) {
-    return result.dump();
-  }
+  if (!timetableOpt)
+    return result;
 
   const Timetable& timetable = timetableOpt.value();
   for (size_t i = 0; i < coursePtrs.size(); i++) {
-    json entry;
-    entry["code"] = coursePtrs[i]->code;
-    entry["type"] = coursePtrs[i]->type;
-    entry["section"] = coursePtrs[i]->sections[timetable.chosenSections[i]]->name;
+    const CourseResult entry = {.code = coursePtrs[i]->code,
+                                .type = coursePtrs[i]->type,
+                                .section = coursePtrs[i]->sections[timetable.chosenSections[i]]->name};
     result.push_back(entry);
   }
 
-  return result.dump();
+  return result;
 }
